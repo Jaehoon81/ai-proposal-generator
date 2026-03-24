@@ -2,7 +2,7 @@
 
 ## 프로젝트 개요
 URL을 입력하면 웹페이지를 스크래핑하고, AI(Gemini 2.5 Flash)가 제안서를 자동 생성하는 웹앱.
-회원가입 없이 전역 공유. Vercel 배포 예정.
+회원가입 없이 전역 공유. Vercel 배포 완료.
 
 ## GitHub
 https://github.com/Jaehoon81/ai-proposal-generator
@@ -12,6 +12,7 @@ https://github.com/Jaehoon81/ai-proposal-generator
 - **AI**: Google Gemini API (gemini-2.5-flash, 무료 tier)
 - **스크래핑**: cheerio (서버사이드 HTML 파싱)
 - **DB**: Supabase (서울 리전, project ref: `<your-project-ref>`)
+- **배포**: Vercel (프로덕션 URL: `https://ai-proposal-generator-livid.vercel.app`)
 - **디자인**: 퍼플 톤 + 다크 모드 / 폰트: Sora(display) + DM Sans(body)
 
 ## 현재 완료된 단계
@@ -19,6 +20,7 @@ https://github.com/Jaehoon81/ai-proposal-generator
 ### Step 1: 프로젝트 초기화 + 기본 레이아웃 ✅
 ### Step 2: URL → 스크래핑 → AI 생성 파이프라인 ✅
 ### Step 3: Supabase 연동 + 제안서 저장/목록 + 프롬프트 저장 ✅
+### Step 4: Vercel 배포 + 프로덕션 테스트 ✅
 
 ## 파일 구조 (현재 상태)
 ```
@@ -101,10 +103,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon 키>
 SUPABASE_SERVICE_ROLE_KEY=<service_role 키>
 ```
 
-## 남은 작업
-
-### Step 4: Vercel 배포
-- 환경변수 설정 + 배포 + 프로덕션 테스트
+## 배포 정보
+- **Vercel 프로젝트**: `jaehoon81s-projects/ai-proposal-generator`
+- **프로덕션 URL**: https://ai-proposal-generator-livid.vercel.app
+- **GitHub 연동**: `Jaehoon81/ai-proposal-generator` → push 시 자동 배포
+- **환경변수**: Vercel 대시보드에 4개 설정 완료 (GEMINI_API_KEY, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY)
 
 ## 주의사항
 - `src/app/settings/page.tsx`는 현재 미사용. 프롬프트 기능이 메인 페이지 드롭다운으로 이동됨. 삭제 가능.
@@ -117,4 +120,5 @@ SUPABASE_SERVICE_ROLE_KEY=<service_role 키>
 ```bash
 npm run dev     # http://localhost:3000
 npm run build   # 프로덕션 빌드 검증
+npx vercel --prod  # Vercel 프로덕션 수동 배포 (GitHub push 시 자동 배포됨)
 ```
