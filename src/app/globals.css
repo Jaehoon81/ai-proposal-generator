@@ -1,26 +1,160 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 퍼플 톤 컬러 시스템 — 화이트 배경 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #faf9fc;
+  --surface: #f7f5fb;
+  --surface-hover: #f0edf7;
+  --surface-border: #e8e4f0;
+  --text-primary: #1e1b2e;
+  --text-secondary: #5b5577;
+  --text-muted: #9690ad;
+  --accent: #7C5CFC;
+  --accent-soft: rgba(124, 92, 252, 0.08);
+}
+
+/* 다크 모드 */
+.dark {
+  --bg-primary: #13111c;
+  --bg-secondary: #1a1726;
+  --surface: #1e1b2e;
+  --surface-hover: #262338;
+  --surface-border: #2e2a42;
+  --text-primary: #eae8f0;
+  --text-secondary: #a8a2c0;
+  --text-muted: #6e6888;
+  --accent: #9B85FC;
+  --accent-soft: rgba(155, 133, 252, 0.1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --font-sans: "DM Sans", sans-serif;
+  --font-display: "Sora", sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* 배경 장식 — 우측 상단 미세한 퍼플 그라데이션 */
+body::after {
+  content: "";
+  position: fixed;
+  top: -20%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 92, 252, 0.06) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 카드 */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass:hover {
+  background: var(--surface-hover);
+  box-shadow: 0 4px 20px rgba(124, 92, 252, 0.1);
+}
+
+.dark .glass {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dark .glass:hover {
+  box-shadow: 0 4px 20px rgba(155, 133, 252, 0.12);
+}
+
+/* 인터랙티브 glass 카드 (클릭 가능한 요소) */
+.glass-interactive {
+  composes: glass;
+  cursor: pointer;
+}
+
+.glass-interactive:active {
+  transform: scale(0.985);
+}
+
+/* 입력 필드 스타일 */
+.glass-input {
+  background: var(--bg-primary);
+  border: 1px solid var(--surface-border);
+  border-radius: 0.875rem;
+  transition: all 0.25s ease;
+}
+
+.glass-input:focus {
+  background: var(--bg-primary);
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.12);
+}
+
+.dark .glass-input:focus {
+  box-shadow: 0 0 0 3px rgba(155, 133, 252, 0.2);
+}
+
+/* 버튼 스타일 */
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 0.875rem;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:hover {
+  background: #6A48E6;
+  box-shadow: 0 4px 16px rgba(124, 92, 252, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* 부드러운 스크롤바 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* 다크 모드 배경 오브 */
+.dark body::after {
+  background: radial-gradient(circle, rgba(155, 133, 252, 0.08) 0%, transparent 70%);
 }
