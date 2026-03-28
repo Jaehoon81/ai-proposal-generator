@@ -18,6 +18,7 @@ export default function Home() {
   const [isSavingProposal, setIsSavingProposal] = useState(false);
   const [formResetKey, setFormResetKey] = useState(0);
   const [isDark, setIsDark] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
   // 초기 다크 모드 상태 동기화
   useEffect(() => {
@@ -132,7 +133,10 @@ export default function Home() {
   }, [fetchProposals, resetView]);
 
   // 제안서 소프트 삭제
-  const handleDeleteProposal = useCallback(async (id: string) => {
+  const confirmDeleteProposal = useCallback(async () => {
+    if (!deleteTarget) return;
+    const id = deleteTarget;
+    setDeleteTarget(null);
     setRecentProposals((prev) => prev.filter((p) => p.id !== id));
     try {
       await fetch(`/api/proposals/${id}`, { method: "DELETE" });
@@ -140,7 +144,7 @@ export default function Home() {
       // 실패 시 목록 재조회로 복구
       fetchProposals();
     }
-  }, [fetchProposals]);
+  }, [deleteTarget, fetchProposals]);
 
   // 취소 (저장하지 않고 초기화)
   const handleDiscardProposal = useCallback(() => {
@@ -286,7 +290,7 @@ export default function Home() {
                 <div key={p.id} className="relative">
                   <button
                     type="button"
-                    onClick={() => handleDeleteProposal(p.id)}
+                    onClick={() => setDeleteTarget(p.id)}
                     className="absolute right-3 top-3 z-10 flex h-6 w-6 items-center justify-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[var(--accent-soft)] hover:text-[var(--text-secondary)]"
                     aria-label="삭제"
                   >
@@ -329,6 +333,58 @@ export default function Home() {
             </>
           )}
         </section>
+      )}
+      {/* 삭제 확인 모달 */}
+      {deleteTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+          onClick={() => setDeleteTarget(null)}
+        >
+          <div
+            className="mx-4 w-full max-w-sm rounded-2xl p-6 shadow-2xl"
+            style={{
+              background: isDark ? '#1e1e2e' : '#ffffff',
+              border: `1px solid ${isDark ? '#3a3a52' : 'transparent'}`,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3
+              className="text-lg font-semibold"
+              style={{ color: isDark ? '#e2e2e8' : '#111827' }}
+            >
+              제안서 삭제
+            </h3>
+            <p
+              className="mt-3 text-sm leading-relaxed"
+              style={{ color: isDark ? '#9d9db5' : '#4b5563' }}
+            >
+              이 제안서를 삭제하시겠습니까?
+              <br />
+              삭제된 제안서는 복구할 수 없습니다.
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                className="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                style={{
+                  border: `1px solid ${isDark ? '#4a4a62' : '#d1d5db'}`,
+                  background: isDark ? 'transparent' : '#ffffff',
+                  color: isDark ? '#c4c4d4' : '#374151',
+                }}
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteProposal}
+                className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
+              >
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
